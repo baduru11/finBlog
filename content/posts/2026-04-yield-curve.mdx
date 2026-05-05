@@ -1,0 +1,90 @@
+---
+title: What a steepening yield curve actually tells you
+summary: After eighteen months of inversion, the 2s10s curve is steepening again. The signal is real, but it's not the one most headlines are claiming.
+date: 2026-04-22
+tags: [rates, macro, concepts]
+concepts: [yield-curve, duration, term-premium, real-yields]
+status: published
+author: Seungwan
+---
+
+For most of 2024 and 2025, the US Treasury yield curve was inverted — the 2-year yield was higher than the 10-year. By textbook, an inverted curve has preceded every US recession since 1969. By the same textbook, the curve *un-inverting* — steepening back to a normal upward slope — is supposed to be the recession signal that actually fires.
+
+So what's happening now, and how worried should you be?
+
+## What "the curve" actually is
+
+<ConceptBox term="Yield curve">
+  A line plotting the yields of US Treasuries across maturities — typically
+  3-month, 2-year, 5-year, 10-year, and 30-year. In normal times it slopes
+  upward (longer = riskier = higher yield). When it slopes down, that's
+  &ldquo;inversion.&rdquo;
+</ConceptBox>
+
+The 2s10s curve — the spread between the 2-year and 10-year yield — is the most-watched single number in fixed income. Today it sits at +18 basis points, having moved from -41 bps in November.
+
+That's a 59-bp swing in five months. Real, but not dramatic by historical standards.
+
+## Two ways a curve can steepen
+
+Here's where most headlines get sloppy. There are two very different kinds of steepening, and they say opposite things about the economy:
+
+1. **Bull steepener.** Both yields fall, but short rates fall *more*. The market is pricing in Fed cuts. This is what happens when the economy is slowing and the Fed is expected to ease.
+2. **Bear steepener.** Both yields rise, but long rates rise *more*. The market is pricing in higher inflation expectations or a higher [term premium](/concepts#term-premium). This is what happens when the economy is running hot or fiscal supply is overwhelming demand for duration.
+
+Today's move is mostly a bull steepener — the 2-year has fallen 38 bps since November while the 10-year is down 9 bps. That's the "Fed is going to cut" trade, not the "duration is getting punished" trade.
+
+<MiniChart
+  data={[
+    { x: "Nov", y: -41 },
+    { x: "Dec", y: -32 },
+    { x: "Jan", y: -18 },
+    { x: "Feb", y: -7 },
+    { x: "Mar", y: 4 },
+    { x: "Apr", y: 18 }
+  ]}
+  caption="2s10s spread, basis points. Inverted in November; positive by April."
+  source="Treasury secondary market"
+  yLabel="bps"
+  height={180}
+/>
+
+<PullQuote attribution="The single most useful distinction in fixed-income reading">
+  A bull steepener typically precedes a recession by 6–18 months. A bear
+  steepener typically follows the start of a recovery. Confusing the two is
+  one of the most common mistakes in finance commentary.
+</PullQuote>
+
+<Callout variant="info" label="Why this matters">
+  A bull steepener typically *precedes* a recession by 6–18 months. A bear
+  steepener typically *follows* the start of a recovery. Confusing the two is
+  one of the most common mistakes I see in finance commentary.
+</Callout>
+
+## What the term premium is doing
+
+The other half of the story is the [term premium](/concepts#term-premium) — the extra yield investors demand for holding longer-dated bonds, beyond what's implied by expected future short rates. It collapsed to roughly zero in 2020 and has been climbing since.
+
+The Adrian-Crump-Moench (ACM) model, which the New York Fed publishes weekly, currently estimates the 10-year term premium at +42 bps — the highest since 2014. That alone explains why the long end isn't falling as fast as the short end: investors *want* compensation for holding long duration in a world where Treasury issuance is heavy and inflation, while declining, is still uncomfortably above target.
+
+<ConceptBox term="Why the term premium can't be observed directly">
+  Future short rates aren't known, so the term premium has to be *estimated*.
+  Different models (ACM, Kim-Wright, etc.) can give answers that disagree by
+  20 bps or more. Treat any single point estimate as a guide, not a fact.
+</ConceptBox>
+
+## What the steepening is actually telling you
+
+If you take the bull steepener at face value: the market expects the Fed to cut roughly three times by end-2026. If you take the term premium at face value: the long end isn't a bargain — investors are getting paid more than usual to hold duration because conditions warrant it.
+
+Combine them, and the message is: *not a recession yet, but the conditions for one are being priced in*. That's exactly what the curve is supposed to do.
+
+## What I'm watching next
+
+- **Fed cuts vs. priced cuts.** If the Fed cuts faster than the market expects, the bull steepener accelerates and you should expect equities to flinch. The May 7 FOMC will tell us a lot.
+- **The 30-year auction tail.** When 30-year auctions tail by more than 2 bps, it's a sign that the long end is struggling for buyers. Two consecutive tails — the next one is on May 14 — would tell me the term premium is repricing higher again.
+- **The 3m10y curve.** Less famous than 2s10s, but the version the [New York Fed](https://www.newyorkfed.org/research/capital_markets/ycfaq) itself uses for its recession-probability model. It's still inverted by 8 bps as of April 22, 2026.
+
+Daily Treasury yield data on which all of this rests comes from the [Treasury's daily par yield curve rates](https://home.treasury.gov/policy-issues/financing-the-government/interest-rate-statistics) — worth bookmarking if you want to follow along.
+
+The shape of the curve is one of the cleanest signals finance has. It just doesn't always say what people think it says.

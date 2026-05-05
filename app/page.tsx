@@ -1,65 +1,105 @@
-import Image from "next/image";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+import { Masthead } from "@/components/Masthead";
+import { GlossaryTeaser } from "@/components/GlossaryTeaser";
+import { EditorialNote } from "@/components/EditorialNote";
+import { getAllPosts } from "@/lib/posts";
+import { formatLongDate } from "@/lib/utils";
 
-export default function Home() {
+export default function HomePage() {
+  const posts = getAllPosts();
+  const [featured, ...rest] = posts;
+  const secondary = rest.slice(0, 6);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <>
+      <Masthead />
+      <div className="container-page">
+        {featured ? (
+          <section className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-10 lg:gap-16 py-12 sm:py-16">
+            <article>
+              <div className="text-kicker mb-5">
+                {featured.tags[0] ?? "Lead story"}
+              </div>
+              <Link
+                href={`/posts/${featured.slugAsParams}`}
+                className="cursor-pointer group block"
+              >
+                <h2
+                  className="font-[family-name:var(--font-display)] text-[2rem] sm:text-[2.75rem] lg:text-[3.25rem] leading-[1.05] font-semibold text-[color:var(--ink)] tracking-tight mb-5 group-hover:text-[color:var(--accent)] transition-colors"
+                  style={{ fontVariationSettings: '"opsz" 144, "SOFT" 100' }}
+                >
+                  {featured.title}
+                </h2>
+                <p className="text-dek max-w-[620px] mb-6">{featured.summary}</p>
+              </Link>
+              <div className="text-byline flex flex-wrap items-center gap-x-4 gap-y-1 mb-6">
+                <span>By {featured.author}</span>
+                <span className="text-[color:var(--ink-subtle)]">·</span>
+                <time dateTime={featured.date}>{formatLongDate(featured.date)}</time>
+                <span className="text-[color:var(--ink-subtle)]">·</span>
+                <span>{featured.readingTimeText}</span>
+              </div>
+              <Link
+                href={`/posts/${featured.slugAsParams}`}
+                className="cursor-pointer inline-flex items-center gap-1.5 text-[0.9375rem] font-medium text-[color:var(--accent)] hover:gap-2.5 transition-all"
+              >
+                Continue reading <ArrowRight size={15} strokeWidth={2.25} />
+              </Link>
+            </article>
+            <GlossaryTeaser />
+          </section>
+        ) : (
+          <section className="py-16">
+            <p className="text-[color:var(--ink-muted)]">First edition coming soon.</p>
+          </section>
+        )}
+
+        {secondary.length > 0 && (
+          <section className="border-t-2 border-[color:var(--rule-strong)] pt-10 sm:pt-14">
+            <div className="flex items-baseline justify-between mb-8">
+              <h2 className="text-kicker">Also in this edition</h2>
+              <Link
+                href="/posts"
+                className="cursor-pointer text-meta text-[color:var(--ink-muted)] hover:text-[color:var(--accent)] transition-colors"
+              >
+                Archive →
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-10 lg:divide-x divide-[color:var(--rule)] gap-y-2">
+              {secondary.map((p, i) => (
+                <article
+                  key={p.slugAsParams}
+                  className={
+                    "pb-8 border-b border-[color:var(--rule)] sm:pb-0 sm:border-b-0 " +
+                    (i > 0 ? "lg:pl-10" : "")
+                  }
+                >
+                  <Link href={`/posts/${p.slugAsParams}`} className="cursor-pointer group block">
+                    <div className="text-kicker mb-3">{p.tags[0] ?? "Note"}</div>
+                    <h3
+                      className="font-[family-name:var(--font-display)] text-[1.375rem] leading-[1.2] font-semibold text-[color:var(--ink)] tracking-tight mb-2 group-hover:text-[color:var(--accent)] transition-colors"
+                      style={{ fontVariationSettings: '"opsz" 48, "SOFT" 50' }}
+                    >
+                      {p.title}
+                    </h3>
+                    <p className="text-[0.9375rem] leading-relaxed text-[color:var(--ink-muted)] line-clamp-2 mb-3">
+                      {p.summary}
+                    </p>
+                    <div className="text-byline flex items-center gap-x-3">
+                      <time dateTime={p.date}>{formatLongDate(p.date)}</time>
+                      <span className="text-[color:var(--ink-subtle)]">·</span>
+                      <span>{p.readingTimeText}</span>
+                    </div>
+                  </Link>
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
+
+        <EditorialNote />
+      </div>
+    </>
   );
 }

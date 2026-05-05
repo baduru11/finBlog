@@ -1,0 +1,41 @@
+name: Notify on new post
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "content/posts/**"
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    if: ${{ vars.NOTIFY_WEBHOOK_URL != '' || secrets.NOTIFY_WEBHOOK_URL != '' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Detect added/changed posts
+        id: changed
+        run: |
+          set -e
+          files=$(git diff --name-only --diff-filter=AM HEAD~1 HEAD -- 'content/posts/*.mdx' || true)
+          echo "files<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$files" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+      - name: POST to webhook
+        if: steps.changed.outputs.files != ''
+        env:
+          WEBHOOK: ${{ secrets.NOTIFY_WEBHOOK_URL }}
+          SITE_URL: ${{ vars.SITE_URL || 'https://fin-blog.vercel.app' }}
+        run: |
+          set -e
+          while IFS= read -r f; do
+            [ -z "$f" ] && continue
+            slug=$(basename "$f" .mdx)
+            title=$(awk '/^title:/{sub(/^title:[[:space:]]*/,""); gsub(/^"|"$/,""); print; exit}' "$f")
+            summary=$(awk '/^summary:/{sub(/^summary:[[:space:]]*/,""); gsub(/^"|"$/,""); print; exit}' "$f")
+            url="$SITE_URL/posts/$slug"
+            payload=$(jq -n --arg t "$title" --arg s "$summary" --arg u "$url" \
+              '{text: ("📰 New post: *" + $t + "*\n" + $s + "\n" + $u)}')
+            curl -fsS -X POST -H 'content-type: application/json' -d "$payload" "$WEBHOOK" || true
+          done <<< "${{ steps.changed.outputs.files }}"
